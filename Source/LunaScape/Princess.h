@@ -3,6 +3,8 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "Engine.h"
+
 #include "Princess.generated.h"
 
 /**
@@ -13,14 +15,20 @@ class LUNASCAPE_API APrincess : public ACharacter
 {
 	GENERATED_BODY()
 
+
 public :
 	APrincess(const FObjectInitializer& ObjectInitializer);
+	//APrincessController pController;
 
-//protected:
-	// APawn interface
-	//virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
-	// End of APawn interface
+	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		float BaseTurnRate;
 
+	/** Called for forwards/backward input */
+	void MoveForward(float Value);
+
+	//Called to turn 
+	void TurnAtRate(float Rate);
 	
-	
+	virtual void Tick(float DeltaSeconds) OVERRIDE;
 };
