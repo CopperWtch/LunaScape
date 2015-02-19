@@ -27,7 +27,64 @@ ABasicTile::ABasicTile(const FObjectInitializer& ObjectInitializer)
 	TileMesh->AttachTo(RootComponent);
 
 	bIsActive = true;
+
+	//Tick() function fires:
+	PrimaryActorTick.bCanEverTick = true;
 }
 
+void ABasicTile::Tick(float DeltaSeconds)
+{
+	//call in constructor on after every touch even later???
+	//for development in TICK
+
+	SetNeighbours();
+}
+
+void ABasicTile::SetNeighbours()
+{
+	//get all actors type BasicTile that collide
+	BaseCollisionComponent->GetOverlappingActors(CollectedTiles, ABasicTile::StaticClass());
+
+	for (int32 i = 0; i < CollectedTiles.Num(); i++)
+	{
+		//Cast to ABasicTile
+		ABasicTile* tile = Cast<ABasicTile>(CollectedTiles[i]);
+
+		//Get positions to compare
+		FVector tilePos;//= CollectedTiles[i]->GetActorLocation();
+		FVector tileBounds;
+		tile->GetActorBounds(false, tilePos, tileBounds);
+
+		FVector thisPos; //= this->GetActorLocation();
+		FVector thisBounds;
+		this->GetActorBounds(false,thisPos,thisBounds);
+
+		//debug
+		//FString TheFloatStr = FString::SanitizeFloat(thisPos.X);
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, *TheFloatStr);
+
+		//set as neighbours depending on position compared to This
+
+		if ((tilePos.X-tileBounds.X/2)>=(thisPos.X + thisBounds.X / 2))
+		{
+			this->SetTileNorth(tile);
+		}
+		if ((tilePos.X+tileBounds.X/2) <= (thisPos.X-thisBounds.X/2))
+		{
+			this->SetTileSouth(tile);
+		}
+		if ((tilePos.Y - tileBounds.Y / 2) >= (thisPos.Y + thisBounds.Y / 2))
+		{
+			this->SetTileEast(tile);
+		}
+		if ((tilePos.Y + tileBounds.Y / 2) <= (thisPos.Y - thisBounds.Y / 2))
+		{
+			this->SetTileWest(tile);
+		}
+
+	}
+
+
+}
 //methods, move etc
 //TODO

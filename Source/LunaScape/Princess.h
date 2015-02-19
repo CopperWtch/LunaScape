@@ -4,12 +4,22 @@
 
 #include "GameFramework/Character.h"
 #include "Engine.h"
-
+#include "BasicTile.h"
 #include "Princess.generated.h"
 
 /**
  * 
  */
+
+//enum for direction the character faces
+enum class EFacing : short
+{
+	ENorth,
+	EEast,
+	ESouth,
+	EWest
+};
+
 UCLASS()
 class LUNASCAPE_API APrincess : public ACharacter
 {
@@ -25,10 +35,13 @@ public :
 		float BaseTurnRate;
 
 	/** Called for forwards/backward input */
-	void MoveForward(float Value);
-
-	//Called to turn 
-	void TurnAtRate(float Rate);
+	void MoveX(float Value);
+	void MoveY(float Value);
 	
 	virtual void Tick(float DeltaSeconds) OVERRIDE;
+	void CheckPath();
+	TArray<AActor*> CollectedTiles;
+
+private:
+	EFacing facingDirection;
 };
