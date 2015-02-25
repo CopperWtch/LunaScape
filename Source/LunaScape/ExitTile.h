@@ -3,6 +3,7 @@
 #pragma once
 
 #include "BasicTile.h"
+#include "LunaScapeGameMode.h"
 #include "ExitTile.generated.h"
 
 /**

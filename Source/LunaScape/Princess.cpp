@@ -2,6 +2,7 @@
 
 #include "LunaScape.h"
 #include "Princess.h"
+#include "LunaScapeGameMode.h"
 
 APrincess::APrincess(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)
@@ -17,6 +18,9 @@ APrincess::APrincess(const FObjectInitializer& ObjectInitializer)
 
 	//set the FACING variable default
 	facingDirection = EFacing::ENorth;
+
+	//starting speed:
+	vel=5.f;
 
 	//Tick() function fires:
 	PrimaryActorTick.bCanEverTick = true;
@@ -57,11 +61,19 @@ void APrincess::MoveY(float Value)
 void APrincess::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	ALunaScapeGameMode* gm = (ALunaScapeGameMode*)GetWorld()->GetAuthGameMode();
+
+	//Only check the path & Move if the player is playing a level
+	if(gm!= NULL && gm->GetCurrentState()==ELunaScapePlayState::EPlaying)
+	{
+
 	CheckPath();
 
 	FString rYaw = FString::SanitizeFloat(this->GetControlRotation().Yaw);
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, rYaw);
+	}
 
+	//velocity=velocity*velocity;
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "CHAR TICK");
 
 }
@@ -69,16 +81,22 @@ void APrincess::Tick(float DeltaSeconds)
 //Checks where to go according to the positions of the tiles
 void APrincess::CheckPath()
 {
+	CapsuleComponent->GetOverlappingActors(CollectedTiles, AExitTile::StaticClass());
+	if(CollectedTiles.Num()>0)
+		{
+			ALunaScapeGameMode* gm = (ALunaScapeGameMode*)GetWorld()->GetAuthGameMode();
+			gm->SetCurrentState(ELunaScapePlayState::EGameWon);
+		}
+	else
+	{
 	//get all actors type BasicTile that collide
 	CapsuleComponent->GetOverlappingActors(CollectedTiles, ABasicTile::StaticClass());
 
-	//for (int32 i = 0; i < CollectedTiles.Num(); i++)
-	//{
-
-		//Only use the first tile
-		//Cast to ABasicTile
-	if (CollectedTiles[0])
+	//Check if something is colliding
+	if (CollectedTiles.Num()>0)
 	{
+		//Cast to ABasicTile
+		//Only use the first tile
 		ABasicTile* tile = Cast<ABasicTile>(CollectedTiles[0]);
 
 		//Check which direction the character is facing 
@@ -87,10 +105,11 @@ void APrincess::CheckPath()
 		{
 			//Character faces north
 		case EFacing::ENorth:
+			MoveX(vel);
 			if (tile->GetTileNorth())
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "FORWARD");
-				MoveX(0.3f);
+				
 			}
 			else if (tile->GetTileEast())
 			{
@@ -114,10 +133,11 @@ void APrincess::CheckPath()
 			break;
 		case EFacing::EEast:
 			//Character faces EAST
+			MoveX(vel);
 			if (tile->GetTileEast())
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "FORWARD");
-				MoveX(0.3f);
+				
 			}
 			else if (tile->GetTileSouth())
 			{
@@ -137,10 +157,11 @@ void APrincess::CheckPath()
 			break;
 		case EFacing::ESouth:
 			//Character faces SOUTH
+			MoveX(vel);
 			if (tile->GetTileSouth())
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "FORWARD");
-				MoveX(0.3f);
+				
 			}
 			else if (tile->GetTileWest())
 			{
@@ -160,10 +181,11 @@ void APrincess::CheckPath()
 			break;
 		case EFacing::EWest:
 			//Character faces WEST
-			if (tile->GetTileSouth())
+			MoveX(vel);
+			if (tile->GetTileWest())
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "FORWARD");
-				MoveY(0.3f);
+				
 			}
 			else if (tile->GetTileNorth())
 			{
@@ -185,5 +207,11 @@ void APrincess::CheckPath()
 			break;
 		}
 	}
-	//}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "P_GAME OVER");
+		ALunaScapeGameMode* gm = (ALunaScapeGameMode*)GetWorld()->GetAuthGameMode();
+		gm->SetCurrentState(ELunaScapePlayState::EGameOver);
+	}
+	}
 }

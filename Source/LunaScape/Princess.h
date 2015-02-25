@@ -5,6 +5,7 @@
 #include "GameFramework/Character.h"
 #include "Engine.h"
 #include "BasicTile.h"
+#include "ExitTile.h"
 #include "Princess.generated.h"
 
 /**
@@ -43,5 +44,6 @@ public :
 	TArray<AActor*> CollectedTiles;
 
 private:
+	float vel;
 	EFacing facingDirection;
 };

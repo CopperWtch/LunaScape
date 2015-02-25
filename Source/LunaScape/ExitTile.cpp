@@ -11,5 +11,7 @@ AExitTile::AExitTile(const FObjectInitializer& ObjectInitializer) : Super(Object
 
 void AExitTile::OnSteppedOn_Implementation()
 {
-	//TODO: Win
+	
+	ALunaScapeGameMode* gm = (ALunaScapeGameMode*)GetWorld()->GetAuthGameMode();
+	gm->SetCurrentState(ELunaScapePlayState::EGameWon);
 }

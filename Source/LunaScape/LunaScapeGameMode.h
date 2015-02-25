@@ -9,11 +9,14 @@
  * 
  */
 //enum to store the current state of gameplay
-enum class ELunaScapePlayState : short
+ UENUM(BlueprintType)
+enum class ELunaScapePlayState : uint8 //short
 {
-	EPlaying,
-	EGameOver,
-	EUnknown
+	EPlaying			UMETA(DisplayName="EPlaying"),
+	EGameOver			UMETA(DisplayName="EGameOver"),
+	EGameWon			UMETA(DisplayName="EGameWon"),
+	EMenu				UMETA(DisplayName="EMenu"),
+	EUnknown			UMETA(DisplayName="EUnknown")
 };
 
 UCLASS()
@@ -24,12 +27,20 @@ class LUNASCAPE_API ALunaScapeGameMode : public AGameMode
 public:
 	ALunaScapeGameMode(const FObjectInitializer& ObjectInitializer);
 	ELunaScapePlayState GetCurrentState() const;
-	void SetCurrentState(ELunaScapePlayState NewState);
 
+	UFUNCTION(BlueprintCallable, Category="Enum")
+	void SetCurrentState(ELunaScapePlayState NewState);
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Enum)
+	ELunaScapePlayState CurrentState;
 
 private:
-	ELunaScapePlayState CurrentState;
+
 	void HandleNewState(ELunaScapePlayState NewState);
 	
 	
 };
+FORCEINLINE ELunaScapePlayState ALunaScapeGameMode::GetCurrentState() const
+{
+	return CurrentState;
+}

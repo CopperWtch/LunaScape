@@ -12,6 +12,7 @@ ALunaScapeGameMode::ALunaScapeGameMode(const FObjectInitializer& ObjectInitializ
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+	SetCurrentState(ELunaScapePlayState::EMenu);
 
 }
 
@@ -26,10 +27,24 @@ void ALunaScapeGameMode::HandleNewState(ELunaScapePlayState NewState)
 	switch (NewState)
 	{
 	case ELunaScapePlayState::EPlaying:
+		if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "EPlaying");
 		break;
 	case ELunaScapePlayState::EGameOver:
+		if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "EGameOver");
+		break;
+	case ELunaScapePlayState::EGameWon:
+		if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "EGameWon");
+		break;
+	case ELunaScapePlayState::EMenu:
+		if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "EMenu");
 		break;
 	case ELunaScapePlayState::EUnknown:
+		if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "EUnknown");
 	default:
 		//do nothing
 		break;
