@@ -4,8 +4,6 @@
 
 #include "GameFramework/Character.h"
 #include "Engine.h"
-#include "BasicTile.h"
-#include "ExitTile.h"
 #include "Princess.generated.h"
 
 /**
@@ -37,13 +35,17 @@ public :
 
 	/** Called for forwards/backward input */
 	void MoveX(float Value);
-	void MoveY(float Value);
 	
 	virtual void Tick(float DeltaSeconds) OVERRIDE;
-	void CheckPath();
-	TArray<AActor*> CollectedTiles;
 
 private:
 	float vel;
 	EFacing facingDirection;
+
+public:
+	void SetVelocity(float value){ this->vel = value; };
+	float GetVel(){ return vel; };
+
+	void SetfacingDirection(EFacing state);
+	EFacing GetfacingDirection(){ return facingDirection; };
 };

@@ -20,7 +20,7 @@ APrincess::APrincess(const FObjectInitializer& ObjectInitializer)
 	facingDirection = EFacing::ENorth;
 
 	//starting speed:
-	vel=5.f;
+	vel=0.f;
 
 	//Tick() function fires:
 	PrimaryActorTick.bCanEverTick = true;
@@ -43,20 +43,6 @@ void APrincess::MoveX(float Value)
 	}
 }
 
-void APrincess::MoveY(float Value)
-{
-	if ((Controller != NULL) && (Value != 0.0f))
-	{
-		// find out which way is right
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get right vector 
-		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-		// add movement in that direction
-		AddMovementInput(Direction, Value);
-	}
-}
 
 void APrincess::Tick(float DeltaSeconds)
 {
@@ -67,151 +53,91 @@ void APrincess::Tick(float DeltaSeconds)
 	if(gm!= NULL && gm->GetCurrentState()==ELunaScapePlayState::EPlaying)
 	{
 
-	CheckPath();
+	//CheckPath();
 
-	FString rYaw = FString::SanitizeFloat(this->GetControlRotation().Yaw);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, rYaw);
+	/*FString rYaw = FString::SanitizeFloat(this->GetActorLocation().X);
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, rYaw);*/
+
+	MoveX(vel);
 	}
 
-	//velocity=velocity*velocity;
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "CHAR TICK");
-
+	
 }
 
-//Checks where to go according to the positions of the tiles
-void APrincess::CheckPath()
+//void APrincess::CheckPath()
+//{
+//	CapsuleComponent->GetOverlappingActors(CollectedTiles, AExitTile::StaticClass());
+//	if (CollectedTiles.Num()>0)
+//	{
+//		ALunaScapeGameMode* gm = (ALunaScapeGameMode*)GetWorld()->GetAuthGameMode();
+//		gm->SetCurrentState(ELunaScapePlayState::EGameWon);
+//	}
+//	else
+//	{
+//		//get all actors type BasicTile that collide
+//		CapsuleComponent->GetOverlappingActors(CollectedTiles, ABasicTile::StaticClass());
+//
+//		//Check if something is colliding
+//		if (CollectedTiles.Num()>0)
+//		{
+//			//Cast to ABasicTile
+//			//Only use the first tile
+//			ABasicTile* tile = Cast<ABasicTile>(CollectedTiles[0]);
+//
+//			//Check which direction the character is facing 
+//			//use the information to determine how the character needs to behave
+//			switch (facingDirection)
+//			{
+//				//Character faces north
+//			case EFacing::ENorth:
+//
+//				break;
+//			case EFacing::EEast:
+//
+//				break;
+//			case EFacing::ESouth:
+//
+//				break;
+//			case EFacing::EWest:
+//
+//				break;
+//			default:
+//				break;
+//			}
+//		}
+//		else
+//		{
+//			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "P_GAME OVER");
+//			ALunaScapeGameMode* gm = (ALunaScapeGameMode*)GetWorld()->GetAuthGameMode();
+//			gm->SetCurrentState(ELunaScapePlayState::EGameOver);
+//		}
+//	}
+//}
+
+void APrincess::SetfacingDirection(EFacing state)
 {
-	CapsuleComponent->GetOverlappingActors(CollectedTiles, AExitTile::StaticClass());
-	if(CollectedTiles.Num()>0)
-		{
-			ALunaScapeGameMode* gm = (ALunaScapeGameMode*)GetWorld()->GetAuthGameMode();
-			gm->SetCurrentState(ELunaScapePlayState::EGameWon);
-		}
-	else
+	FRotator currentRot = Controller->GetControlRotation();
+	switch (state)
 	{
-	//get all actors type BasicTile that collide
-	CapsuleComponent->GetOverlappingActors(CollectedTiles, ABasicTile::StaticClass());
-
-	//Check if something is colliding
-	if (CollectedTiles.Num()>0)
-	{
-		//Cast to ABasicTile
-		//Only use the first tile
-		ABasicTile* tile = Cast<ABasicTile>(CollectedTiles[0]);
-
-		//Check which direction the character is facing 
-		//use the information to determine how the character needs to behave
-		switch (facingDirection)
-		{
-			//Character faces north
-		case EFacing::ENorth:
-			MoveX(vel);
-			if (tile->GetTileNorth())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "FORWARD");
-				
-			}
-			else if (tile->GetTileEast())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TURN RIGHT");
-
-
-				const FRotator Rotation = Controller->GetControlRotation();
-				AddControllerYawInput(+35);
-
-				facingDirection = EFacing::EEast;
-			}
-			else if (tile->GetTileWest())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TURN LEFT");
-				
-				const FRotator Rotation = Controller->GetControlRotation();
-				AddControllerYawInput( - 35);
-
-				facingDirection = EFacing::EWest;
-			}
-			break;
-		case EFacing::EEast:
-			//Character faces EAST
-			MoveX(vel);
-			if (tile->GetTileEast())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "FORWARD");
-				
-			}
-			else if (tile->GetTileSouth())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TURN RIGHT");
-
-				const FRotator Rotation = Controller->GetControlRotation();
-				AddControllerYawInput(+ 35);
-				facingDirection = EFacing::ESouth;
-			}
-			else if (tile->GetTileNorth())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TURN LEFT");
-				const FRotator Rotation = Controller->GetControlRotation();
-				AddControllerYawInput( - 35);
-				facingDirection = EFacing::ENorth;
-			}
-			break;
-		case EFacing::ESouth:
-			//Character faces SOUTH
-			MoveX(vel);
-			if (tile->GetTileSouth())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "FORWARD");
-				
-			}
-			else if (tile->GetTileWest())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TURN RIGHT");
-
-				const FRotator Rotation = Controller->GetControlRotation();
-				AddControllerYawInput(+ 35);
-				facingDirection = EFacing::EWest;
-			}
-			else if (tile->GetTileEast())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TURN LEFT");
-				const FRotator Rotation = Controller->GetControlRotation();
-				AddControllerYawInput(- 35);
-				facingDirection = EFacing::EEast;
-			}
-			break;
-		case EFacing::EWest:
-			//Character faces WEST
-			MoveX(vel);
-			if (tile->GetTileWest())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "FORWARD");
-				
-			}
-			else if (tile->GetTileNorth())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TURN RIGHT");
-
-				const FRotator Rotation = Controller->GetControlRotation();
-				AddControllerYawInput(+ 35);
-				facingDirection = EFacing::ENorth;
-			}
-			else if (tile->GetTileSouth())
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "TURN LEFT");
-				const FRotator Rotation = Controller->GetControlRotation();
-				AddControllerYawInput(- 35);
-				facingDirection = EFacing::ESouth;
-			}
-			break;
-		default:
-			break;
-		}
+	case EFacing::ENorth:
+		Controller->SetControlRotation(FRotator(currentRot.Pitch,0.f,currentRot.Roll));
+		this->facingDirection = EFacing::ENorth;
+		break;
+	case EFacing::EEast:
+		Controller->SetControlRotation(FRotator(currentRot.Pitch, 90.f, currentRot.Roll));
+		this->facingDirection = EFacing::EEast;
+		break;
+	case EFacing::ESouth:
+		Controller->SetControlRotation(FRotator(currentRot.Pitch, 180.f, currentRot.Roll));
+		this->facingDirection = EFacing::ESouth;
+		break;
+	case EFacing::EWest:
+		Controller->SetControlRotation(FRotator(currentRot.Pitch, -90.f, currentRot.Roll));
+		this->facingDirection = EFacing::EWest;
+		break;
+	default:
+		break;
 	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "P_GAME OVER");
-		ALunaScapeGameMode* gm = (ALunaScapeGameMode*)GetWorld()->GetAuthGameMode();
-		gm->SetCurrentState(ELunaScapePlayState::EGameOver);
-	}
-	}
+
+	
 }

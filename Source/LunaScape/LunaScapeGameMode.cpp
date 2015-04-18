@@ -2,6 +2,7 @@
 
 #include "LunaScape.h"
 #include "LunaScapeGameMode.h"
+#include "InteractionController.h"
 
 ALunaScapeGameMode::ALunaScapeGameMode(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)
@@ -12,7 +13,20 @@ ALunaScapeGameMode::ALunaScapeGameMode(const FObjectInitializer& ObjectInitializ
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
-	SetCurrentState(ELunaScapePlayState::EMenu);
+
+	//static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerBPClass(TEXT("/Game/Blueprints/BP_TouchClickController"));
+	//if (PlayerControllerBPClass.Class != NULL)
+	//{
+	//	PlayerControllerClass = PlayerControllerBPClass.Class;
+	//}
+
+	//use player controller class
+	PlayerControllerClass = AInteractionController::StaticClass();
+
+	SetCurrentState(ELunaScapePlayState::EPlaying);
+
+	//BP_TouchClickController
+	countMoves = 0;
 
 }
 

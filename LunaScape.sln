@@ -7,21 +7,34 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LunaScape", "Intermediate\P
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		DebugGame Editor|Android = DebugGame Editor|Android
 		DebugGame Editor|Windows = DebugGame Editor|Windows
+		DebugGame|Android = DebugGame|Android
 		DebugGame|Windows = DebugGame|Windows
+		Development Editor|Android = Development Editor|Android
 		Development Editor|Windows = Development Editor|Windows
+		Development|Android = Development|Android
 		Development|Windows = Development|Windows
+		Shipping|Android = Shipping|Android
 		Shipping|Windows = Shipping|Windows
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2765B80-D388-41C8-9C7D-4562AF74F905}.DebugGame Editor|Android.ActiveCfg = Development_Game|x64
 		{B2765B80-D388-41C8-9C7D-4562AF74F905}.DebugGame Editor|Windows.ActiveCfg = DebugGame_Editor|x64
 		{B2765B80-D388-41C8-9C7D-4562AF74F905}.DebugGame Editor|Windows.Build.0 = DebugGame_Editor|x64
+		{B2765B80-D388-41C8-9C7D-4562AF74F905}.DebugGame|Android.ActiveCfg = DebugGame_Game|Tegra-Android
+		{B2765B80-D388-41C8-9C7D-4562AF74F905}.DebugGame|Android.Build.0 = DebugGame_Game|Tegra-Android
 		{B2765B80-D388-41C8-9C7D-4562AF74F905}.DebugGame|Windows.ActiveCfg = DebugGame_Game|x64
 		{B2765B80-D388-41C8-9C7D-4562AF74F905}.DebugGame|Windows.Build.0 = DebugGame_Game|x64
+		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Development Editor|Android.ActiveCfg = Development_Game|x64
 		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Development Editor|Windows.ActiveCfg = Development_Editor|x64
 		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Development Editor|Windows.Build.0 = Development_Editor|x64
+		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Development|Android.ActiveCfg = Development_Game|Tegra-Android
+		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Development|Android.Build.0 = Development_Game|Tegra-Android
 		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Development|Windows.ActiveCfg = Development_Game|x64
 		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Development|Windows.Build.0 = Development_Game|x64
+		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Shipping|Android.ActiveCfg = Shipping_Game|Tegra-Android
+		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Shipping|Android.Build.0 = Shipping_Game|Tegra-Android
 		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Shipping|Windows.ActiveCfg = Shipping_Game|Win32
 		{B2765B80-D388-41C8-9C7D-4562AF74F905}.Shipping|Windows.Build.0 = Shipping_Game|Win32
 	EndGlobalSection

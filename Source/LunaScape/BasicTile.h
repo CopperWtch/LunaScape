@@ -3,6 +3,8 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "Princess.h"
+#include "HelperGrid.h"
 #include "BasicTile.generated.h"
 
 /**
@@ -19,6 +21,10 @@ private:
 	ABasicTile* tileSouth;
 	ABasicTile* tileEast;
 	ABasicTile* tileWest;
+
+	//Is the Tile currently being moved?
+	bool bIsMoved;
+	bool bInitialSet;
 	
 public:
 	ABasicTile(const FObjectInitializer& ObjectInitializer);
@@ -34,7 +40,7 @@ public:
 
 	/** Returns **/
 	FORCEINLINE class USceneComponent* GetBaseCollisionComponent() const { return BaseCollisionComponent; }
-	FORCEINLINE class USceneComponent* GetTileMesh() const { return TileMesh; }
+	//FORCEINLINE class USceneComponent* GetTileMesh() const { return TileMesh; }
 
 	//neighbour tiles GETTER
 	ABasicTile* GetTileSouth(){ return tileSouth; };
@@ -52,6 +58,35 @@ public:
 
 	void SetNeighbours();
 	TArray<AActor*> CollectedTiles;
-	//methods to move them etc
+	TArray<AActor*> CloseTiles;
+
+	//methods to move them etc--------------------------------------------------------------------------------------
+
+	bool GetIsMoved(){ return bIsMoved;	};
+	void SetIsMoved(bool value){bIsMoved = value;};
+
+	/** Handle the block being clicked */
+	UFUNCTION()
+	void TileClicked(UPrimitiveComponent* ClickedComp);
+
+	/** Handle the block being released */
+	UFUNCTION()
+	void TileReleased(UPrimitiveComponent* ClickedComp);
+
+	/** Handle the block being touched  */
+	UFUNCTION()
+	void OnFingerPressedTile(ETouchIndex::Type FingerIndex, UPrimitiveComponent* TouchedComponent);
+
+	/** Handle the block being released  */
+	UFUNCTION()
+	void OnFingerReleasedTile(ETouchIndex::Type FingerIndex, UPrimitiveComponent* TouchedComponent);
+
+	//Update position of the tile when dragged
+	UFUNCTION()
+	void UpdatePosition();
+
+	APrincess* princess;
+	TArray<AActor*> CollidingActors;
+	void FindPath();
 	//TODO
 };

@@ -34,9 +34,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Enum)
 	ELunaScapePlayState CurrentState;
 
+	/** amount of moves */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = NumberOfMoves)
+		int32 countMoves;
+
 private:
 
 	void HandleNewState(ELunaScapePlayState NewState);
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "NumberOfMoves")
+		int32 GetNumMoves(){ return countMoves; };
 	
 	
 };

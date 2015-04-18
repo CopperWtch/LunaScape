@@ -17,7 +17,7 @@ class LUNASCAPE_API AExitTile : public ABasicTile
 public:
 	AExitTile(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintNativeEvent)
-		void OnSteppedOn();
-	
+	void OnSteppedOn();
+
+	virtual void Tick(float DeltaSeconds) OVERRIDE;
 };
